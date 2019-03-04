@@ -14,8 +14,7 @@
     "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
   },
   "dependencies": {
-    "ansi-escape-sequences": "file:../../75lb/ansi-escape-sequences",
-    "chalk": "^2.4.2"
+    "ansi-escape-sequences": "^4.1.0"
   },
   "devDependencies": {
     "rollup": "^1.4.1"
