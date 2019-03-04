@@ -1,0 +1,23 @@
+{
+  "name": "@test-runner/default-view",
+  "author": "Lloyd Brookes <75pound@gmail.com>",
+  "version": "0.0.0",
+  "description": "default-view",
+  "repository": "https://github.com/test-runner-js/default-view",
+  "keywords": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "test": "test-runner test/*.js",
+    "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
+  },
+  "dependencies": {
+    "ansi-escape-sequences": "file:../../75lb/ansi-escape-sequences",
+    "chalk": "^2.4.2"
+  },
+  "devDependencies": {
+    "rollup": "^1.4.1"
+  }
+}
