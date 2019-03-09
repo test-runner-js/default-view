@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "description": "default-view",
   "repository": "https://github.com/test-runner-js/default-view",
+  "main": "dist/index.js",
   "keywords": [],
   "license": "MIT",
   "engines": {
