@@ -21,7 +21,8 @@ class DefaultView {
   }
   testSkip (test) {
     const indent = ' '.repeat(test.level())
-    console.log(ansi.format(`${indent}[gray]{- ${test.name}}`))
+    const parent = test.parent ? test.parent.name : ''
+    console.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
   }
   testIgnore (test) {
     const indent = ' '.repeat(test.level())
