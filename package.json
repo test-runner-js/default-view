@@ -18,6 +18,6 @@
     "ansi-escape-sequences": "^4.1.0"
   },
   "devDependencies": {
-    "rollup": "^1.4.1"
+    "rollup": "^1.7.3"
   }
 }

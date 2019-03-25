@@ -319,8 +319,20 @@
     testIgnore (test) {
       const indent = ' '.repeat(test.level());
     }
+
+    /**
+     * @params {object} stats
+     * @params {object} stats.fail
+     * @params {object} stats.pass
+     * @params {object} stats.skip
+     * @params {object} stats.start
+     * @params {object} stats.end
+     */
     end (stats) {
-      console.log(ansi.format(`\n[white]{Completed in: ${stats.timeElapsed()}ms. Pass: [green]{${stats.pass}}, fail: [red]{${stats.fail}}, skip: ${stats.skip}.}\n`));
+      const timeElapsed = stats.end - stats.start;
+      const failColour = stats.fail > 0 ? 'red' : 'white';
+      const passColour = stats.pass > 0 ? 'green' : 'white';
+      console.log(ansi.format(`\n[white]{Completed in: ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: ${stats.skip}.}\n`));
     }
   }
 
