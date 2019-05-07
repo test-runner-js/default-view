@@ -11,6 +11,7 @@ const defaultView = new DefaultView()
   defaultView.testSkip(test2)
 }
 
+console.log('Footer: pass colour')
 defaultView.end({
   start: 10000,
   end: 20000,
@@ -20,20 +21,22 @@ defaultView.end({
   ignore: 0
 })
 
+console.log('Footer: fail colour')
 defaultView.end({
 	start: 10000,
   end: 20000,
   pass: 0,
   fail: 10,
-  skip: 1,
-  ignore: 1
+  skip: 0,
+  ignore: 0
 })
 
+console.log('Footer: skip colour')
 defaultView.end({
 	start: 10000,
   end: 20000,
-  pass: 5,
-  fail: 5,
-  skip: 1,
-  ignore: 1
+  pass: 0,
+  fail: 0,
+  skip: 10,
+  ignore: 0
 })

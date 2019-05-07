@@ -18,11 +18,16 @@
     "ansi-escape-sequences": "^4.1.0"
   },
   "devDependencies": {
-    "rollup": "^1.7.3",
-    "test-object-model": "^0.3.8"
+    "rollup": "^1.11.3",
+    "test-object-model": "^0.4.3"
   },
   "files": [
     "index.mjs",
     "dist/index.js"
-  ]
+  ],
+  "standard": {
+    "ignore": [
+      "dist"
+    ]
+  }
 }

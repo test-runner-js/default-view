@@ -40,7 +40,8 @@ class DefaultView {
     const timeElapsed = stats.end - stats.start
     const failColour = stats.fail > 0 ? 'red' : 'white'
     const passColour = stats.pass > 0 ? 'green' : 'white'
-    console.log(ansi.format(`\n[white]{Completed in: ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: ${stats.skip}.}\n`))
+    const skipColour = stats.skip > 0 ? 'grey' : 'white'
+    console.log(ansi.format(`\n[white]{Completed in: ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`))
   }
 }
 
