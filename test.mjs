@@ -1,7 +1,6 @@
-import buildView from './index.mjs'
+import DefaultView from './index.mjs'
 import Tom from 'test-object-model'
 
-const DefaultView = buildView()
 const defaultView = new DefaultView()
 
 {

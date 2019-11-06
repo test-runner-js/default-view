@@ -16,7 +16,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": "node --experimental-modules test.mjs",
+    "test": "npm run dist && node --experimental-modules test.mjs",
     "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
   },
   "dependencies": {
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "rollup": "^1.26.3",
-    "test-object-model": "^0.4.6"
+    "test-object-model": "^0.4.7"
   },
   "files": [
     "index.mjs",

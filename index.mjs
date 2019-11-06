@@ -1,7 +1,7 @@
 import ansi from './node_modules/ansi-escape-sequences/dist/index.mjs'
 
 class DefaultView {
-  constructor (options) {
+  constructor (options = {}) {
     this.options = options
   }
 
@@ -35,7 +35,7 @@ class DefaultView {
   }
 
   testSkip (test) {
-    if (this.options.viewShowSkips) {
+    if (!this.options.viewHideSkips) {
       const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
       console.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
@@ -63,7 +63,7 @@ class DefaultView {
   static optionDefinitions () {
     return [
       {
-        name: 'view.show-skips',
+        name: 'view.hide-skips',
         type: Boolean
       },
       {
