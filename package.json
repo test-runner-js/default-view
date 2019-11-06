@@ -11,15 +11,16 @@
     "node": ">=6"
   },
   "scripts": {
-    "test": "test-runner test/*.js",
+    "test": "node --experimental-modules test.mjs",
     "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
   },
   "dependencies": {
-    "ansi-escape-sequences": "^4.1.0"
+    "ansi-escape-sequences": "^5.0.0",
+    "create-mixin": "^2.0.1"
   },
   "devDependencies": {
-    "rollup": "^1.11.3",
-    "test-object-model": "^0.4.3"
+    "rollup": "^1.26.3",
+    "test-object-model": "^0.4.6"
   },
   "files": [
     "index.mjs",

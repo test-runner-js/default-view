@@ -1,6 +1,7 @@
-import DefaultView from './index.mjs'
+import buildView from './index.mjs'
 import Tom from 'test-object-model'
 
+const DefaultView = buildView()
 const defaultView = new DefaultView()
 
 {
@@ -23,7 +24,7 @@ defaultView.end({
 
 console.log('Footer: fail colour')
 defaultView.end({
-	start: 10000,
+  start: 10000,
   end: 20000,
   pass: 0,
   fail: 10,
@@ -33,7 +34,7 @@ defaultView.end({
 
 console.log('Footer: skip colour')
 defaultView.end({
-	start: 10000,
+  start: 10000,
   end: 20000,
   pass: 0,
   fail: 0,
