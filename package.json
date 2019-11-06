@@ -2,21 +2,25 @@
   "name": "@test-runner/default-view",
   "author": "Lloyd Brookes <75pound@gmail.com>",
   "version": "0.2.3",
-  "description": "default-view",
+  "description": "Default view for test-runner",
   "repository": "https://github.com/test-runner-js/default-view",
   "main": "dist/index.js",
-  "keywords": [],
+  "module": "index.mjs",
+  "keywords": [
+    "test-runner",
+    "test-runner-view",
+    "view"
+  ],
   "license": "MIT",
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "scripts": {
     "test": "node --experimental-modules test.mjs",
     "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
   },
   "dependencies": {
-    "ansi-escape-sequences": "^5.0.0",
-    "create-mixin": "^2.0.1"
+    "ansi-escape-sequences": "^5.0.0"
   },
   "devDependencies": {
     "rollup": "^1.26.3",
