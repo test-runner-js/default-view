@@ -299,8 +299,12 @@
   };
 
   class DefaultView {
+    constructor (options) {
+      this.options = options;
+    }
+
     start (count) {
-      console.log(ansi.format(`\n[white]{Processing ${count} tests}\n`));
+      console.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`));
     }
 
     testPass (test, result) {
@@ -313,22 +317,30 @@
       const indent = ' '.repeat(test.level());
       const parent = test.parent ? test.parent.name : '';
       console.log(ansi.format(`${indent}[red]{⨯} [magenta]{${parent}}`), test.name);
-      const lines = err.stack.split('\n').map(line => {
+      const lines = this.getErrorMessage(err).split('\n').map(line => {
         const indent = ' '.repeat(test.level() + 2);
         return indent + line
       });
-      console.log(ansi.format(`[grey]{${lines.join('\n')}}`));
+      console.log(ansi.format(`\n${lines.join('\n').trimEnd()}\n`));
+    }
+
+    getErrorMessage (err) {
+      if (this.options.viewHideErrStack) {
+        return err.message
+      } else {
+        return err.stack
+      }
     }
 
     testSkip (test) {
-      const indent = ' '.repeat(test.level());
-      const parent = test.parent ? test.parent.name : '';
-      console.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`));
+      if (this.options.viewShowSkips) {
+        const indent = ' '.repeat(test.level());
+        const parent = test.parent ? test.parent.name : '';
+        console.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`));
+      }
     }
 
-    testIgnore (test) {
-      const indent = ' '.repeat(test.level());
-    }
+    testIgnore (test) {}
 
     /**
      * @params {object} stats
@@ -343,70 +355,23 @@
       const failColour = stats.fail > 0 ? 'red' : 'white';
       const passColour = stats.pass > 0 ? 'green' : 'white';
       const skipColour = stats.skip > 0 ? 'grey' : 'white';
-      console.log(ansi.format(`\n[white]{Completed in: ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`));
+      console.log(ansi.format(`\n[white]{Completed in ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`));
+    }
+
+    static optionDefinitions () {
+      return [
+        {
+          name: 'view.show-skips',
+          type: Boolean
+        },
+        {
+          name: 'view.hide-err-stack',
+          type: Boolean
+        },
+      ]
     }
   }
 
-  /**
-   * Creates a mixin for use in a class extends expression.
-   * @module create-mixin
-   */
-
-  /**
-   * @alias module:create-mixin
-   * @param {class} Src - The class containing the behaviour you wish to mix into another class.
-   * @returns {function}
-   */
-  function createMixin (Src) {
-    return function (Base) {
-      class Mixed extends Base {}
-      for (const propName of Object.getOwnPropertyNames(Src.prototype)) {
-        if (propName === 'constructor') continue
-        Object.defineProperty(Mixed.prototype, propName, Object.getOwnPropertyDescriptor(Src.prototype, propName));
-      }
-      if (Src.prototype[Symbol.iterator]) {
-        Object.defineProperty(Mixed.prototype, Symbol.iterator, Object.getOwnPropertyDescriptor(Src.prototype, Symbol.iterator));
-      }
-      return Mixed
-    }
-  }
-
-  /* print only error message, not full error stack */
-  class OneLineError {
-    testFail (test, err) {
-      const indent = ' '.repeat(test.level());
-      const parent = test.parent ? test.parent.name : '';
-      console.log(ansi.format(`${indent}[red]{⨯} [magenta]{${parent}}`), test.name);
-      // const lines = err.stack.split('\n').map(line => {
-      //   const indent = ' '.repeat(test.level() + 2)
-      //   return indent + line
-      // }).slice(0, 1)
-      const lines = err.message
-        .split('\n')
-        .map(line => {
-          const indent = ' '.repeat(test.level() + 2);
-          return indent + line
-        })
-        .filter(line => line.trim());
-      console.log(ansi.format(`[grey]{${lines.join('\n')}}`));
-    }
-  }
-
-  class NoSkips {
-    testSkip () {}
-  }
-
-  function build (options = {}) {
-    let ViewClass = DefaultView;
-    if (options.noSkips) {
-      ViewClass = createMixin(NoSkips)(ViewClass);
-    }
-    if (options.oneLineError) {
-      ViewClass = createMixin(OneLineError)(ViewClass);
-    }
-    return ViewClass
-  }
-
-  return build;
+  return DefaultView;
 
 })));
