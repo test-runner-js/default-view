@@ -18,7 +18,10 @@ defaultView.end({
   pass: 10,
   fail: 0,
   skip: 0,
-  ignore: 0
+  ignore: 0,
+  timeElapsed: function () {
+    return this.end - this.start
+  }
 })
 
 console.log('Footer: fail colour')
@@ -28,7 +31,10 @@ defaultView.end({
   pass: 0,
   fail: 10,
   skip: 0,
-  ignore: 0
+  ignore: 0,
+  timeElapsed: function () {
+    return this.end - this.start
+  }
 })
 
 console.log('Footer: skip colour')
@@ -38,5 +44,8 @@ defaultView.end({
   pass: 0,
   fail: 0,
   skip: 10,
-  ignore: 0
+  ignore: 0,
+  timeElapsed: function () {
+    return this.end - this.start
+  }
 })

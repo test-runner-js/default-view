@@ -5,33 +5,37 @@ class DefaultView {
     this.options = options
   }
 
+  log (...args) {
+    console.log(...args)
+  }
+
   start (count) {
-    console.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`))
+    this.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`))
   }
 
   testStart (test) {
     if (this.options.viewShowStarts) {
       const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
-      console.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(90,90,90)]{${test.name}}`))
+      this.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(90,90,90)]{${test.name}}`))
     }
   }
 
   testPass (test, result) {
     const indent = ' '.repeat(test.level())
     const parent = test.parent ? test.parent.name : ''
-    console.log(ansi.format(`${indent}[green]{✓} [magenta]{${parent}}`), test.name, result ? `[${result}]` : '')
+    this.log(ansi.format(`${indent}[green]{✓} [magenta]{${parent}}`), test.name, result ? `[${result}]` : '')
   }
 
   testFail (test, err) {
     const indent = ' '.repeat(test.level())
     const parent = test.parent ? test.parent.name : ''
-    console.log(ansi.format(`${indent}[red]{⨯} [magenta]{${parent}}`), test.name)
+    this.log(ansi.format(`${indent}[red]{⨯} [magenta]{${parent}}`), test.name)
     const lines = this.getErrorMessage(err).split('\n').map(line => {
       const indent = ' '.repeat(test.level() + 2)
       return indent + line
     })
-    console.log(ansi.format(`\n${lines.join('\n').trimEnd()}\n`))
+    this.log(ansi.format(`\n${lines.join('\n').trimEnd()}\n`))
   }
 
   getErrorMessage (err) {
@@ -46,7 +50,7 @@ class DefaultView {
     if (!this.options.viewHideSkips) {
       const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
-      console.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
+      this.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
     }
   }
 
@@ -61,11 +65,10 @@ class DefaultView {
    * @params {object} stats.end
    */
   end (stats) {
-    const timeElapsed = stats.end - stats.start
     const failColour = stats.fail > 0 ? 'red' : 'white'
     const passColour = stats.pass > 0 ? 'green' : 'white'
     const skipColour = stats.skip > 0 ? 'grey' : 'white'
-    console.log(ansi.format(`\n[white]{Completed in ${timeElapsed}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`))
+    this.log(ansi.format(`\n[white]{Completed in ${stats.timeElapsed()}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`))
   }
 
   static optionDefinitions () {
