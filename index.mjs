@@ -9,6 +9,14 @@ class DefaultView {
     console.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`))
   }
 
+  testStart (test) {
+    if (this.options.viewShowStarts) {
+      const indent = ' '.repeat(test.level())
+      const parent = test.parent ? test.parent.name : ''
+      console.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(90,90,90)]{${test.name}}`))
+    }
+  }
+
   testPass (test, result) {
     const indent = ' '.repeat(test.level())
     const parent = test.parent ? test.parent.name : ''
@@ -68,6 +76,10 @@ class DefaultView {
       },
       {
         name: 'view.hide-err-stack',
+        type: Boolean
+      },
+      {
+        name: 'view.show-starts',
         type: Boolean
       },
     ]

@@ -105,6 +105,13 @@
     white: '\x1b[37m',
     grey: '\x1b[90m',
     gray: '\x1b[90m',
+    brightRed: '\x1b[91m',
+    brightGreen: '\x1b[92m',
+    brightYellow: '\x1b[93m',
+    brightBlue: '\x1b[94m',
+    brightMagenta: '\x1b[95m',
+    brightCyan: '\x1b[96m',
+    brightWhite: '\x1b[97m',
     'bg-black': '\x1b[40m',
     'bg-red': '\x1b[41m',
     'bg-green': '\x1b[42m',
@@ -114,69 +121,81 @@
     'bg-cyan': '\x1b[46m',
     'bg-white': '\x1b[47m',
     'bg-grey': '\x1b[100m',
-    'bg-gray': '\x1b[100m'
+    'bg-gray': '\x1b[100m',
+    'bg-brightRed': '\x1b[101m',
+    'bg-brightGreen': '\x1b[102m',
+    'bg-brightYellow': '\x1b[103m',
+    'bg-brightBlue': '\x1b[104m',
+    'bg-brightMagenta': '\x1b[105m',
+    'bg-brightCyan': '\x1b[106m',
+    'bg-brightWhite': '\x1b[107m'
   };
 
   /**
-   * style enum - used by `ansi.styles()`.
-   * @enum {number}
-   * @private
+   * Returns a 24-bit "true colour" foreground escape sequence.
+   * @param {number} r - Red value.
+   * @param {number} g - Green value.
+   * @param {number} b - Blue value.
+   * @returns {string}
+   * @example
+   * > ansi.rgb(120, 0, 120)
+   * '\u001b[38;2;120;0;120m'
    */
-  const eStyles = {
-    reset: 0,
-    bold: 1,
-    italic: 3,
-    underline: 4,
-    imageNegative: 7,
-    fontDefault: 10,
-    font2: 11,
-    font3: 12,
-    font4: 13,
-    font5: 14,
-    font6: 15,
-    imagePositive: 27,
-    black: 30,
-    red: 31,
-    green: 32,
-    yellow: 33,
-    blue: 34,
-    magenta: 35,
-    cyan: 36,
-    white: 37,
-    grey: 90,
-    gray: 90,
-    'bg-black': 40,
-    'bg-red': 41,
-    'bg-green': 42,
-    'bg-yellow': 43,
-    'bg-blue': 44,
-    'bg-magenta': 45,
-    'bg-cyan': 46,
-    'bg-white': 47,
-    'bg-grey': 100,
-    'bg-gray': 100
+  ansi.rgb = function (r, g, b) {
+    return `\x1b[38;2;${r};${g};${b}m`
   };
 
   /**
-   * Returns an ansi sequence setting one or more effects
-   * @param {string | string[]} - a style, or list or styles
+   * Returns a 24-bit "true colour" background escape sequence.
+   * @param {number} r - Red value.
+   * @param {number} g - Green value.
+   * @param {number} b - Blue value.
+   * @returns {string}
+   * @example
+   * > ansi.bgRgb(120, 0, 120)
+   * '\u001b[38;2;120;0;120m'
+   */
+  ansi.bgRgb = function (r, g, b) {
+    return `\x1b[48;2;${r};${g};${b}m`
+  };
+
+  /**
+   * Returns an ansi sequence setting one or more styles.
+   * @param {string | string[]} - One or more style strings.
    * @returns {string}
    * @example
    * > ansi.styles('green')
    * '\u001b[32m'
    *
    * > ansi.styles([ 'green', 'underline' ])
-   * '\u001b[32;4m'
+   * '\u001b[32m\u001b[4m'
+   *
+   * > ansi.styles([ 'bg-red', 'rgb(200,200,200)' ])
+   * '\u001b[41m\u001b[38;2;200;200;200m'
    */
-  ansi.styles = function (effectArray) {
-    effectArray = arrayify(effectArray);
-    return csi + effectArray.map(function (effect) { return eStyles[effect] }).join(';') + 'm'
+  ansi.styles = function (styles) {
+    styles = arrayify(styles);
+    return styles
+      .map(function (effect) {
+        const rgbMatches = effect.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        const bgRgbMatches = effect.match(/bg-rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (bgRgbMatches) {
+          const [full, r, g, b] = bgRgbMatches;
+          return ansi.bgRgb(r, g, b)
+        } else if (rgbMatches) {
+          const [full, r, g, b] = rgbMatches;
+          return ansi.rgb(r, g, b)
+        } else {
+          return ansi.style[effect]
+        }
+      })
+      .join('')
   };
 
   /**
    * A convenience function, applying the provided styles to the input string and then resetting.
    *
-   * Inline styling can be applied using the syntax `[style-list]{text to format}`, where `style-list` is a space-separated list of styles from {@link module:ansi-escape-sequences.style ansi.style}. For example `[bold white bg-red]{bold white text on a red background}`.
+   * Inline styling can be applied using the syntax `[style-list]{text to format}`, where `style-list` is a space-separated list of styles from {@link module:ansi-escape-sequences.style ansi.style}. For example `[bold white bg-red]{bold white text on a red background}`. 24-bit "true colour" values can be set using `rgb(n,n,n)` syntax (no spaces), for example `[rgb(255,128,0) underline]{orange underlined}`. Background 24-bit colours can be set using `bg-rgb(n,n,n)` syntax.
    *
    * @param {string} - the string to format
    * @param [styleArray] {string[]} - a list of styles to add to the input string
@@ -186,13 +205,19 @@
    * '\u001b[32mwhat?\u001b[0m'
    *
    * > ansi.format('what?', ['green', 'bold'])
-   * '\u001b[32;1mwhat?\u001b[0m'
+   * '\u001b[32m\u001b[1mwhat?\u001b[0m'
    *
-   * > ansi.format('[green bold]{what?}')
-   * '\u001b[32;1mwhat?\u001b[0m'
+   * > ansi.format('something', ['rgb(255,128,0)', 'bold'])
+   * '\u001b[38;2;255;128;0m\u001b[1msomething\u001b[0m'
+   *
+   * > ansi.format('[rgb(255,128,0) bold]{something}')
+   * '\u001b[38;2;255;128;0m\u001b[1msomething\u001b[0m'
+   *
+   * > ansi.format('[bg-rgb(255,128,0) bold]{something}')
+   * '\u001b[48;2;255;128;0m\u001b[1msomething\u001b[0m'
    */
   ansi.format = function (str, styleArray) {
-    const re = /\[([\w\s-]+)\]{([^]*?)}/;
+    const re = /\[([\w\s-\(\),]+)\]{([^]*?)}/;
     let matches;
     if (!str) return ''
 
@@ -307,6 +332,14 @@
       console.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`));
     }
 
+    testStart (test) {
+      if (this.options.viewShowStarts) {
+        const indent = ' '.repeat(test.level());
+        const parent = test.parent ? test.parent.name : '';
+        console.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(90,90,90)]{${test.name}}`));
+      }
+    }
+
     testPass (test, result) {
       const indent = ' '.repeat(test.level());
       const parent = test.parent ? test.parent.name : '';
@@ -366,6 +399,10 @@
         },
         {
           name: 'view.hide-err-stack',
+          type: Boolean
+        },
+        {
+          name: 'view.show-starts',
           type: Boolean
         },
       ]

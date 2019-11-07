@@ -17,14 +17,15 @@
   },
   "scripts": {
     "test": "npm run dist && node --experimental-modules test.mjs",
-    "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js"
+    "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js",
+    "watch": "rollup index.mjs -f umd -n DefaultView -o dist/index.js -w"
   },
   "dependencies": {
-    "ansi-escape-sequences": "^5.0.0"
+    "ansi-escape-sequences": "^5.1.1"
   },
   "devDependencies": {
     "rollup": "^1.26.3",
-    "test-object-model": "^0.4.7"
+    "test-object-model": "^0.4.8"
   },
   "files": [
     "index.mjs",
