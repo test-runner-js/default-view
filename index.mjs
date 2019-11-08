@@ -17,7 +17,7 @@ class DefaultView {
     if (this.options.viewShowStarts) {
       const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
-      this.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(90,90,90)]{${test.name}}`))
+      this.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`))
     }
   }
 
