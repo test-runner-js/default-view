@@ -17,8 +17,8 @@
   },
   "scripts": {
     "test": "npm run dist && node --experimental-modules test.mjs",
-    "dist": "rollup index.mjs -f umd -n DefaultView -o dist/index.js",
-    "watch": "rollup index.mjs -f umd -n DefaultView -o dist/index.js -w"
+    "dist": "rollup -c",
+    "watch": "rollup -c -w"
   },
   "dependencies": {
     "ansi-escape-sequences": "^5.1.1"
