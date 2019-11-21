@@ -21,11 +21,11 @@
     "watch": "rollup -c -w"
   },
   "dependencies": {
-    "ansi-escape-sequences": "^5.1.1"
+    "ansi-escape-sequences": "^5.1.2"
   },
   "devDependencies": {
-    "rollup": "^1.26.3",
-    "test-object-model": "^0.4.8"
+    "rollup": "^1.27.3",
+    "test-object-model": "^0.5.2"
   },
   "files": [
     "index.mjs",

@@ -1,6 +1,12 @@
 import ansi from './node_modules/ansi-escape-sequences/dist/index.mjs'
 
 class DefaultView {
+  /**
+   * @param {object} [options]
+   * @param {object} [options.viewHideSkips]
+   * @param {object} [options.viewHideErrStack]
+   * @param {object} [options.viewShowStarts]
+   */
   constructor (options = {}) {
     this.options = options
   }
