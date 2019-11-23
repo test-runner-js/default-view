@@ -21,25 +21,21 @@ class DefaultView {
 
   testStart (test) {
     if (this.options.viewShowStarts) {
-      const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
-      this.log(ansi.format(`${indent}[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`))
+      this.log(ansi.format(`[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`))
     }
   }
 
   testPass (test, result) {
-    const indent = ' '.repeat(test.level())
     const parent = test.parent ? test.parent.name : ''
-    this.log(ansi.format(`${indent}[green]{✓} [magenta]{${parent}}`), test.name, result ? `[${result}]` : '')
+    this.log(ansi.format(`[green]{✓} [magenta]{${parent}}`), test.name, result ? `[${result}]` : '')
   }
 
   testFail (test, err) {
-    const indent = ' '.repeat(test.level())
     const parent = test.parent ? test.parent.name : ''
-    this.log(ansi.format(`${indent}[red]{⨯} [magenta]{${parent}}`), test.name)
+    this.log(ansi.format(`[red]{⨯} [magenta]{${parent}}`), test.name)
     const lines = this.getErrorMessage(err).split('\n').map(line => {
-      const indent = ' '.repeat(test.level() + 2)
-      return indent + line
+      return '   ' + line
     })
     this.log(ansi.format(`\n${lines.join('\n').trimEnd()}\n`))
   }
@@ -54,9 +50,8 @@ class DefaultView {
 
   testSkip (test) {
     if (!this.options.viewHideSkips) {
-      const indent = ' '.repeat(test.level())
       const parent = test.parent ? test.parent.name : ''
-      this.log(ansi.format(`${indent}[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
+      this.log(ansi.format(`[grey]{-} [grey]{${parent}} [grey]{${test.name}}`))
     }
   }
 
