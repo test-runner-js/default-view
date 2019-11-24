@@ -353,7 +353,9 @@
 
     testPass (test, result) {
       const parent = test.parent ? test.parent.name : '';
-      this.log(ansi.format(`[green]{✓} [magenta]{${parent}}`), test.name, result ? `[${result}]` : '');
+      result = result === undefined ? '' : ` [${result}]`;
+      const duration = test.stats.duration.toFixed(1) + 'ms';
+      this.log(ansi.format(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`));
     }
 
     testFail (test, err) {
