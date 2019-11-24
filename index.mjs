@@ -76,15 +76,18 @@ class DefaultView {
     return [
       {
         name: 'view.hide-skips',
-        type: Boolean
+        type: Boolean,
+        description: 'Hide skipped tests.'
       },
       {
         name: 'view.hide-err-stack',
-        type: Boolean
+        type: Boolean,
+        description: 'Under a failed test, show the error message instead of the full error stack.'
       },
       {
         name: 'view.show-starts',
-        type: Boolean
+        type: Boolean,
+        description: 'Show test start events.'
       },
     ]
   }
