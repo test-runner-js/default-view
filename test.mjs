@@ -1,14 +1,64 @@
 import DefaultView from './index.mjs'
 import Tom from 'test-object-model'
 
-const defaultView = new DefaultView()
+const defaultView = new DefaultView({ viewShowStarts: true })
 
 {
-  const parent = new Tom('parent')
-  const test = parent.test('test 1')
-  defaultView.testSkip(test)
-  const test2 = parent.test('test 2')
-  defaultView.testSkip(test2)
+  async function start () {
+    console.log('Main report:')
+    defaultView.start(10)
+    const parent = new Tom('parent')
+    const test = parent.test('test 1', () => 1)
+    await test.run()
+    defaultView.testStart(test)
+    defaultView.testSkip(test)
+    const test2 = parent.test('test 2', () => 2)
+    await test2.run()
+    defaultView.testPass(test2)
+    const test3 = parent.test('test 3', () => { throw new Error('broken') })
+    try {
+      await test3.run()
+    } catch (err) {
+      defaultView.testFail(test3, test3.result)
+    }
+  }
+
+  start().catch(console.error)
+}
+
+{
+  async function start () {
+    console.log('In-test data:')
+    const test = new Tom('test 1', function () {
+      this.data = {
+        something: 'one',
+        yeah: true
+      }
+    })
+    await test.run()
+    defaultView.testPass(test)
+  }
+
+  start().catch(console.error)
+}
+
+{
+  async function start () {
+    const test = new Tom('test 2', function () {
+      this.data = {
+        something: 'one',
+        yeah: true
+      }
+      throw new Error('broken')
+    })
+    try {
+      await test.run()
+    } catch (err) {
+      defaultView.testFail(test, test.result)
+    }
+  }
+
+  start().catch(console.error)
 }
 
 console.log('Footer: pass colour')

@@ -1,3 +1,5 @@
+import util from 'util';
+
 /**
  * Takes any input and guarantees an array back.
  *
@@ -331,17 +333,18 @@ class DefaultView {
   }
 
   log (...args) {
-    console.log(...args);
+    const msg = args.join(' ');
+    console.log(ansi.format(msg));
   }
 
   start (count) {
-    this.log(ansi.format(`\n[white]{Start: ${count} tests loaded}\n`));
+    this.log(`\n[white]{Start: ${count} tests loaded}\n`);
   }
 
   testStart (test) {
     if (this.options.viewShowStarts) {
       const parent = test.parent ? test.parent.name : '';
-      this.log(ansi.format(`[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`));
+      this.log(`[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`);
     }
   }
 
@@ -349,16 +352,33 @@ class DefaultView {
     const parent = test.parent ? test.parent.name : '';
     result = result === undefined ? '' : ` [${result}]`;
     const duration = test.stats.duration.toFixed(1) + 'ms';
-    this.log(ansi.format(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`));
+    this.log(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`);
+    if (test.context.data) {
+      if (typeof window === 'undefined') {
+        const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+        this.log(`\n${data.trimEnd()}\n`);
+      }
+    }
   }
 
   testFail (test, err) {
     const parent = test.parent ? test.parent.name : '';
-    this.log(ansi.format(`[red]{⨯} [magenta]{${parent}}`), test.name);
-    const lines = this.getErrorMessage(err).split('\n').map(line => {
-      return '   ' + line
+    this.log(`[red]{⨯} [magenta]{${parent}}`, test.name);
+    const errMessage = this.indent(this.getErrorMessage(err), '   ');
+    this.log(`\n${errMessage.trimEnd()}\n`);
+    if (test.context.data) {
+      if (typeof window === 'undefined') {
+        const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+        this.log(`\n${data.trimEnd()}\n`);
+      }
+    }
+  }
+
+  indent (input, indentWith) {
+    const lines = input.split('\n').map(line => {
+      return indentWith + line
     });
-    this.log(ansi.format(`\n${lines.join('\n').trimEnd()}\n`));
+    return lines.join('\n')
   }
 
   getErrorMessage (err) {
@@ -372,7 +392,7 @@ class DefaultView {
   testSkip (test) {
     if (!this.options.viewHideSkips) {
       const parent = test.parent ? test.parent.name : '';
-      this.log(ansi.format(`[grey]{-} [grey]{${parent}} [grey]{${test.name}}`));
+      this.log(`[grey]{-} [grey]{${parent}} [grey]{${test.name}}`);
     }
   }
 
@@ -390,7 +410,7 @@ class DefaultView {
     const failColour = stats.fail > 0 ? 'red' : 'white';
     const passColour = stats.pass > 0 ? 'green' : 'white';
     const skipColour = stats.skip > 0 ? 'grey' : 'white';
-    this.log(ansi.format(`\n[white]{Completed in ${stats.timeElapsed()}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`));
+    this.log(`\n[white]{Completed in ${stats.timeElapsed()}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`);
   }
 
   static optionDefinitions () {

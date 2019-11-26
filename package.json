@@ -24,8 +24,8 @@
     "ansi-escape-sequences": "^5.1.2"
   },
   "devDependencies": {
-    "rollup": "^1.27.4",
-    "test-object-model": "^0.5.2"
+    "rollup": "^1.27.5",
+    "test-object-model": "^0.5.4"
   },
   "files": [
     "index.mjs",
