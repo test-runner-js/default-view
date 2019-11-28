@@ -1,5 +1,3 @@
-import util from 'util';
-
 /**
  * Takes any input and guarantees an array back.
  *
@@ -332,6 +330,12 @@ class DefaultView {
     this.options = options;
   }
 
+  async init () {
+    if (typeof window === 'undefined') {
+      this._util = await import('util');
+    }
+  }
+
   log (...args) {
     const msg = args.join(' ');
     console.log(ansi.format(msg));
@@ -355,7 +359,8 @@ class DefaultView {
     this.log(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`);
     if (test.context.data) {
       if (typeof window === 'undefined') {
-        const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+        const str = this.inspect(test.context.data);
+        const data = this.indent(str, '   ');
         this.log(`\n${data.trimEnd()}\n`);
       }
     }
@@ -368,9 +373,18 @@ class DefaultView {
     this.log(`\n${errMessage.trimEnd()}\n`);
     if (test.context.data) {
       if (typeof window === 'undefined') {
-        const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+        const str = this.inspect(test.context.data);
+        const data = this.indent(str, '   ');
         this.log(`\n${data.trimEnd()}\n`);
       }
+    }
+  }
+
+  inspect (input) {
+    if (typeof window === 'undefined') {
+      return this._util.inspect(input, { colors: true })
+    } else {
+      return JSON.stringify(input, null, '  ')
     }
   }
 

@@ -5,6 +5,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
 
 {
   async function start () {
+    await defaultView.init()
     console.log('Main report:')
     defaultView.start(10)
     const parent = new Tom('parent')
@@ -28,6 +29,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
 
 {
   async function start () {
+    await defaultView.init()
     console.log('In-test data:')
     const test = new Tom('test 1', function () {
       this.data = {
@@ -44,6 +46,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
 
 {
   async function start () {
+    await defaultView.init()
     const test = new Tom('test 2', function () {
       this.data = {
         something: 'one',

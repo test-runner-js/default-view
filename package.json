@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "rollup": "^1.27.5",
-    "test-object-model": "^0.5.4"
+    "test-object-model": "^0.5.6"
   },
   "files": [
     "index.mjs",

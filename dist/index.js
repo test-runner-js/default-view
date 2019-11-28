@@ -1,10 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('util')) :
-  typeof define === 'function' && define.amd ? define(['util'], factory) :
-  (global = global || self, global.DefaultView = factory(global.util));
-}(this, (function (util) { 'use strict';
-
-  util = util && util.hasOwnProperty('default') ? util['default'] : util;
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.DefaultView = factory());
+}(this, (function () { 'use strict';
 
   /**
    * Takes any input and guarantees an array back.
@@ -338,6 +336,12 @@
       this.options = options;
     }
 
+    async init () {
+      if (typeof window === 'undefined') {
+        this._util = await import('util');
+      }
+    }
+
     log (...args) {
       const msg = args.join(' ');
       console.log(ansi.format(msg));
@@ -361,7 +365,8 @@
       this.log(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`);
       if (test.context.data) {
         if (typeof window === 'undefined') {
-          const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+          const str = this.inspect(test.context.data);
+          const data = this.indent(str, '   ');
           this.log(`\n${data.trimEnd()}\n`);
         }
       }
@@ -374,9 +379,18 @@
       this.log(`\n${errMessage.trimEnd()}\n`);
       if (test.context.data) {
         if (typeof window === 'undefined') {
-          const data = this.indent(util.inspect(test.context.data, { colors: true }), '   ');
+          const str = this.inspect(test.context.data);
+          const data = this.indent(str, '   ');
           this.log(`\n${data.trimEnd()}\n`);
         }
+      }
+    }
+
+    inspect (input) {
+      if (typeof window === 'undefined') {
+        return this._util.inspect(input, { colors: true })
+      } else {
+        return JSON.stringify(input, null, '  ')
       }
     }
 
