@@ -3,7 +3,7 @@ module.exports = [
     input: 'index.mjs',
     output: {
       file: 'dist/index.js',
-      format: 'umd',
+      format: 'cjs',
       name: 'DefaultView'
     }
   },
