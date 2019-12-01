@@ -1,7 +1,7 @@
 {
   "name": "@test-runner/default-view",
   "author": "Lloyd Brookes <75pound@gmail.com>",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Default view for test-runner",
   "repository": "https://github.com/test-runner-js/default-view",
   "main": "dist/index.js",
