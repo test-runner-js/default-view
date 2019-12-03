@@ -3,7 +3,7 @@ import Tom from 'test-object-model'
 
 const defaultView = new DefaultView({ viewShowStarts: true })
 
-{
+{ /* main report */
   async function start () {
     await defaultView.init()
     console.log('Main report:')
@@ -22,15 +22,17 @@ const defaultView = new DefaultView({ viewShowStarts: true })
     } catch (err) {
       defaultView.testFail(test3, test3.result)
     }
+
+    const todo = parent.todo('a todo')
+    defaultView.testTodo(todo)
   }
 
   start().catch(console.error)
 }
 
-{
+{ /* context data: pass */
   async function start () {
     await defaultView.init()
-    console.log('In-test data:')
     const test = new Tom('test 1', function () {
       this.data = {
         something: 'one',
@@ -44,7 +46,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
   start().catch(console.error)
 }
 
-{
+{ /* context data: fail */
   async function start () {
     await defaultView.init()
     const test = new Tom('test 2', function () {

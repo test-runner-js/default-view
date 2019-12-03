@@ -91,6 +91,13 @@ class DefaultView {
     }
   }
 
+  testTodo (test) {
+    if (!this.options.viewHideSkips) {
+      const parent = test.parent ? test.parent.name : '';
+      this.log(`[cyan]{-} [cyan]{${parent}} [cyan]{${test.name}}`);
+    }
+  }
+
   testIgnore (test) {}
 
   /**
