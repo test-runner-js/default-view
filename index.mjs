@@ -42,14 +42,14 @@ class DefaultView {
   testStart (test) {
     if (this.options.viewShowStarts) {
       const th = this.theme
-      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+      const parent = this.getParent(test)
       this.log(`[${th.groupDark}]{∙ ${parent}} [${th.testDark}]{${test.name}}`)
     }
   }
 
   testPass (test) {
     const th = this.theme
-    const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+    const parent = this.getParent(test)
     const result = test.result === undefined ? '' : ` [${test.result}]`
     const duration = test.stats.duration.toFixed(1) + 'ms'
     this.log(`[${th.pass}]{✓} [${th.group}]{${parent}}${test.name}${result} [${th.duration}]{${duration}}`)
@@ -62,9 +62,10 @@ class DefaultView {
     }
   }
 
-  testFail (test, err) {
+  testFail (test) {
     const th = this.theme
-    const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+    const err = test.result
+    const parent = this.getParent(test)
     this.log(`[${th.fail}]{⨯} [${th.group}]{${parent}}${test.name}`)
     const errMessage = this.indent(this.getErrorMessage(err), '   ')
     this.log(`\n${errMessage.trimEnd()}\n`)
@@ -80,7 +81,7 @@ class DefaultView {
   testSkip (test) {
     if (!this.options.viewHideSkips) {
       const th = this.theme
-      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+      const parent = this.getParent(test)
       this.log(`[${th.skip}]{-} [${th.skip}]{${parent}}[${th.skip}]{${test.name}}`)
     }
   }
@@ -88,16 +89,8 @@ class DefaultView {
   testTodo (test) {
     if (!this.options.viewHideSkips) {
       const th = this.theme
-      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : '';
+      const parent = this.getParent(test);
       this.log(`[${th.todo}]{-} [${th.todo}]{${parent}}[${th.todo}]{${test.name}}`);
-    }
-  }
-
-  testIgnore (test) {
-    if (!this.options.viewHideSkips) {
-      const th = this.theme
-      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : '';
-      this.log(`[${th.ignore}]{-} [${th.ignore}]{${parent}}[${th.ignore}]{${test.name}}`);
     }
   }
 
@@ -122,6 +115,10 @@ class DefaultView {
     } else {
       return err.stack
     }
+  }
+
+  getParent (test) {
+    return test.parent ? test.parents().reverse().slice(1).map(p => p.name).join(' > ').trim() + ' ' : ''
   }
 
   /**

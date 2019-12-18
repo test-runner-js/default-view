@@ -8,7 +8,8 @@ const defaultView = new DefaultView({ viewShowStarts: true })
     await defaultView.init()
     console.log('Main report:')
     defaultView.start(10)
-    const parent = new Tom('parent')
+    const root = new Tom('root')
+    const parent = root.group('parent')
     const test = parent.test('main test 1', () => 1)
     await test.run()
     defaultView.testStart(test)
@@ -20,7 +21,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
     try {
       await test3.run()
     } catch (err) {
-      defaultView.testFail(test3, test3.result)
+      defaultView.testFail(test3)
     }
 
     const todo = parent.todo('main: a todo')
@@ -30,7 +31,7 @@ const defaultView = new DefaultView({ viewShowStarts: true })
   start().catch(console.error)
 }
 
-{ /* context data: pass */
+{ /* no root group, context data: pass */
   async function start () {
     await defaultView.init()
     const test = new Tom('test 1', function () {
@@ -46,25 +47,14 @@ const defaultView = new DefaultView({ viewShowStarts: true })
   start().catch(console.error)
 }
 
-{ /* deep tree, multiple parents: pass */
+{ /* no root group, context data: fail */
   async function start () {
     await defaultView.init()
-    const tom = new Tom('root')
-    const tom2 = tom.group('level 1')
-    const test = tom2.test('deep tree', function () {})
-    await test.run()
-    defaultView.testPass(test)
-  }
-
-  start().catch(console.error)
-}
-
-{ /* deep tree, multiple parents: fail */
-  async function start () {
-    await defaultView.init()
-    const tom = new Tom('root')
-    const tom2 = tom.group('level 1')
-    const test = tom2.test('deep tree fail', function () {
+    const test = new Tom('context data: fail', function () {
+      this.data = {
+        something: 'one',
+        yeah: true
+      }
       throw new Error('broken')
     })
     try {
@@ -77,14 +67,36 @@ const defaultView = new DefaultView({ viewShowStarts: true })
   start().catch(console.error)
 }
 
-{ /* context data: fail */
+{ /* deep tree, multiple parents: pass and fail */
   async function start () {
     await defaultView.init()
-    const test = new Tom('context data: fail', function () {
-      this.data = {
-        something: 'one',
-        yeah: true
-      }
+    const tom = new Tom('root')
+    const level1 = tom.group('level 1')
+    const level2 = level1.group('level 2')
+    const test = level2.test('deep tree', function () {})
+    const test2 = level2.test('deep tree fail', function () {
+      throw new Error('broken')
+    })
+
+    await test.run()
+    defaultView.testPass(test)
+
+    try {
+      await test2.run()
+    } catch (err) {
+      defaultView.testFail(test2)
+    }
+  }
+
+  start().catch(console.error)
+}
+
+{ /* deep tree, multiple parents: fail */
+  async function start () {
+    await defaultView.init()
+    const tom = new Tom('root')
+    const tom2 = tom.group('level 1')
+    const test = tom2.test('deep tree fail', function () {
       throw new Error('broken')
     })
     try {
