@@ -42,17 +42,17 @@ class DefaultView {
   testStart (test) {
     if (this.options.viewShowStarts) {
       const th = this.theme
-      const parent = test.parent ? test.parent.name : ''
+      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
       this.log(`[${th.groupDark}]{∙ ${parent}} [${th.testDark}]{${test.name}}`)
     }
   }
 
-  testPass (test, result) {
+  testPass (test) {
     const th = this.theme
-    const parent = test.parent ? test.parent.name : ''
-    result = result === undefined ? '' : ` [${result}]`
+    const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+    const result = test.result === undefined ? '' : ` [${test.result}]`
     const duration = test.stats.duration.toFixed(1) + 'ms'
-    this.log(`[${th.pass}]{✓} [${th.group}]{${parent}} ${test.name}${result} [${th.duration}]{${duration}}`)
+    this.log(`[${th.pass}]{✓} [${th.group}]{${parent}}${test.name}${result} [${th.duration}]{${duration}}`)
     if (test.context.data) {
       if (typeof window === 'undefined') {
         const str = this.inspect(test.context.data)
@@ -64,8 +64,8 @@ class DefaultView {
 
   testFail (test, err) {
     const th = this.theme
-    const parent = test.parent ? test.parent.name : ''
-    this.log(`[${th.fail}]{⨯} [${th.group}]{${parent}}`, test.name)
+    const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+    this.log(`[${th.fail}]{⨯} [${th.group}]{${parent}}${test.name}`)
     const errMessage = this.indent(this.getErrorMessage(err), '   ')
     this.log(`\n${errMessage.trimEnd()}\n`)
     if (test.context.data) {
@@ -80,24 +80,24 @@ class DefaultView {
   testSkip (test) {
     if (!this.options.viewHideSkips) {
       const th = this.theme
-      const parent = test.parent ? test.parent.name : ''
-      this.log(`[${th.skip}]{-} [${th.skip}]{${parent}} [${th.skip}]{${test.name}}`)
+      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : ''
+      this.log(`[${th.skip}]{-} [${th.skip}]{${parent}}[${th.skip}]{${test.name}}`)
     }
   }
 
   testTodo (test) {
     if (!this.options.viewHideSkips) {
       const th = this.theme
-      const parent = test.parent ? test.parent.name : '';
-      this.log(`[${th.todo}]{-} [${th.todo}]{${parent}} [${th.todo}]{${test.name}}`);
+      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : '';
+      this.log(`[${th.todo}]{-} [${th.todo}]{${parent}}[${th.todo}]{${test.name}}`);
     }
   }
 
   testIgnore (test) {
     if (!this.options.viewHideSkips) {
       const th = this.theme
-      const parent = test.parent ? test.parent.name : '';
-      this.log(`[${th.ignore}]{-} [${th.ignore}]{${parent}} [${th.ignore}]{${test.name}}`);
+      const parent = test.parent ? test.parents().map(p => p.name).join(' > ').trim() + ' ' : '';
+      this.log(`[${th.ignore}]{-} [${th.ignore}]{${parent}}[${th.ignore}]{${test.name}}`);
     }
   }
 
