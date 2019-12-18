@@ -1,6 +1,7 @@
 module.exports = [
   {
     input: 'index.mjs',
+    external: ['util'],
     output: {
       file: 'dist/index.js',
       format: 'cjs',
@@ -9,6 +10,7 @@ module.exports = [
   },
   {
     input: 'index.mjs',
+    external: ['util'],
     output: {
       file: 'dist/index.mjs',
       format: 'esm'

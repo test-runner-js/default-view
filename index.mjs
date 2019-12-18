@@ -9,6 +9,19 @@ class DefaultView {
    */
   constructor (options = {}) {
     this.options = options
+    this.theme = {
+      test: 'white',
+      plain: 'white',
+      testDark: 'rgb(135,135,135)',
+      group: 'magenta',
+      groupDark: 'rgb(110,0,110)',
+      fail: 'red',
+      pass: 'green',
+      skip: 'grey',
+      todo: 'cyan',
+      ignore: 'blue',
+      duration: 'rgb(100,100,0)'
+    }
   }
 
   async init () {
@@ -23,21 +36,23 @@ class DefaultView {
   }
 
   start (count) {
-    this.log(`\n[white]{Start: ${count} tests loaded}\n`)
+    this.log(`\n[${this.theme.plain}]{Start: ${count} tests loaded}\n`)
   }
 
   testStart (test) {
     if (this.options.viewShowStarts) {
+      const th = this.theme
       const parent = test.parent ? test.parent.name : ''
-      this.log(`[rgb(110,0,110)]{∙ ${parent}} [rgb(135,135,135)]{${test.name}}`)
+      this.log(`[${th.groupDark}]{∙ ${parent}} [${th.testDark}]{${test.name}}`)
     }
   }
 
   testPass (test, result) {
+    const th = this.theme
     const parent = test.parent ? test.parent.name : ''
     result = result === undefined ? '' : ` [${result}]`
     const duration = test.stats.duration.toFixed(1) + 'ms'
-    this.log(`[green]{✓} [magenta]{${parent}} ${test.name}${result} [rgb(100,100,0)]{${duration}}`)
+    this.log(`[${th.pass}]{✓} [${th.group}]{${parent}} ${test.name}${result} [${th.duration}]{${duration}}`)
     if (test.context.data) {
       if (typeof window === 'undefined') {
         const str = this.inspect(test.context.data)
@@ -48,8 +63,9 @@ class DefaultView {
   }
 
   testFail (test, err) {
+    const th = this.theme
     const parent = test.parent ? test.parent.name : ''
-    this.log(`[red]{⨯} [magenta]{${parent}}`, test.name)
+    this.log(`[${th.fail}]{⨯} [${th.group}]{${parent}}`, test.name)
     const errMessage = this.indent(this.getErrorMessage(err), '   ')
     this.log(`\n${errMessage.trimEnd()}\n`)
     if (test.context.data) {
@@ -58,6 +74,30 @@ class DefaultView {
         const data = this.indent(str, '   ')
         this.log(`\n${data.trimEnd()}\n`)
       }
+    }
+  }
+
+  testSkip (test) {
+    if (!this.options.viewHideSkips) {
+      const th = this.theme
+      const parent = test.parent ? test.parent.name : ''
+      this.log(`[${th.skip}]{-} [${th.skip}]{${parent}} [${th.skip}]{${test.name}}`)
+    }
+  }
+
+  testTodo (test) {
+    if (!this.options.viewHideSkips) {
+      const th = this.theme
+      const parent = test.parent ? test.parent.name : '';
+      this.log(`[${th.todo}]{-} [${th.todo}]{${parent}} [${th.todo}]{${test.name}}`);
+    }
+  }
+
+  testIgnore (test) {
+    if (!this.options.viewHideSkips) {
+      const th = this.theme
+      const parent = test.parent ? test.parent.name : '';
+      this.log(`[${th.ignore}]{-} [${th.ignore}]{${parent}} [${th.ignore}]{${test.name}}`);
     }
   }
 
@@ -84,22 +124,6 @@ class DefaultView {
     }
   }
 
-  testSkip (test) {
-    if (!this.options.viewHideSkips) {
-      const parent = test.parent ? test.parent.name : ''
-      this.log(`[grey]{-} [grey]{${parent}} [grey]{${test.name}}`)
-    }
-  }
-
-  testTodo (test) {
-    if (!this.options.viewHideSkips) {
-      const parent = test.parent ? test.parent.name : '';
-      this.log(`[cyan]{-} [cyan]{${parent}} [cyan]{${test.name}}`);
-    }
-  }
-
-  testIgnore (test) {}
-
   /**
    * @params {object} stats
    * @params {object} stats.fail
@@ -109,10 +133,11 @@ class DefaultView {
    * @params {object} stats.end
    */
   end (stats) {
-    const failColour = stats.fail > 0 ? 'red' : 'white'
-    const passColour = stats.pass > 0 ? 'green' : 'white'
-    const skipColour = stats.skip > 0 ? 'grey' : 'white'
-    this.log(`\n[white]{Completed in ${stats.timeElapsed()}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`)
+    const th = this.theme
+    const failColour = stats.fail > 0 ? th.fail : th.plain
+    const passColour = stats.pass > 0 ? th.pass : th.plain
+    const skipColour = stats.skip > 0 ? th.skip : th.plain
+    this.log(`\n[${th.plain}]{Completed in ${stats.timeElapsed()}ms. Pass: [${passColour}]{${stats.pass}}, fail: [${failColour}]{${stats.fail}}, skip: [${skipColour}]{${stats.skip}}.}\n`)
   }
 
   static optionDefinitions () {
