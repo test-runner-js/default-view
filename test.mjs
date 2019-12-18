@@ -91,24 +91,6 @@ const defaultView = new DefaultView({ viewShowStarts: true })
   start().catch(console.error)
 }
 
-{ /* deep tree, multiple parents: fail */
-  async function start () {
-    await defaultView.init()
-    const tom = new Tom('root')
-    const tom2 = tom.group('level 1')
-    const test = tom2.test('deep tree fail', function () {
-      throw new Error('broken')
-    })
-    try {
-      await test.run()
-    } catch (err) {
-      defaultView.testFail(test, test.result)
-    }
-  }
-
-  start().catch(console.error)
-}
-
 console.log('Footer: pass colour')
 defaultView.end({
   start: 10000,
