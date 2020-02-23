@@ -360,7 +360,8 @@ class DefaultView {
       skip: 'grey',
       todo: 'cyan',
       ignore: 'blue',
-      duration: 'rgb(100,100,0)'
+      duration: 'rgb(100,100,0)',
+      inProgress: 'rgb(255,191,0)'
     };
   }
 
@@ -383,7 +384,7 @@ class DefaultView {
     if (this.options.viewShowStarts) {
       const th = this.theme;
       const parent = this.getParent(test);
-      this.log(`[${th.groupDark}]{∙ ${parent}} [${th.testDark}]{${test.name}}`);
+      this.log(`[${th.groupDark}]{∙ ${parent}}[${th.testDark}]{${test.name}}`);
     }
   }
 
@@ -394,11 +395,15 @@ class DefaultView {
     const duration = test.stats.duration.toFixed(1) + 'ms';
     this.log(`[${th.pass}]{✓} [${th.group}]{${parent}}${test.name}${result} [${th.duration}]{${duration}}`);
     if (test.context.data) {
-      if (typeof window === 'undefined') {
-        const str = this.inspect(test.context.data);
-        const data = this.indent(str, '   ');
-        this.log(`\n${data.trimEnd()}\n`);
-      }
+      this.contextData(test);
+    }
+  }
+
+  contextData (test) {
+    if (typeof window === 'undefined') {
+      const str = this.inspect(test.context.data);
+      const data = this.indent(str, '   ');
+      this.log(`\n${data.trimEnd()}\n`);
     }
   }
 
@@ -410,11 +415,7 @@ class DefaultView {
     const errMessage = this.indent(this.getErrorMessage(err), '   ');
     this.log(`\n${errMessage.trimEnd()}\n`);
     if (test.context.data) {
-      if (typeof window === 'undefined') {
-        const str = this.inspect(test.context.data);
-        const data = this.indent(str, '   ');
-        this.log(`\n${data.trimEnd()}\n`);
-      }
+      this.contextData(test);
     }
   }
 
@@ -458,7 +459,7 @@ class DefaultView {
   }
 
   getParent (test) {
-    return test.parent ? test.parents().reverse().slice(1).map(p => p.name).join(' > ').trim() + ' ' : ''
+    return test.parent ? test.parents().reverse().slice().map(p => p.name).join(' | ').trim() + ' ' : ''
   }
 
   /**
