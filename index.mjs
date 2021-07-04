@@ -1,4 +1,4 @@
-import ansi from './node_modules/ansi-escape-sequences/dist/index.mjs'
+import ansi from 'ansi-escape-sequences'
 
 class DefaultView {
   /**

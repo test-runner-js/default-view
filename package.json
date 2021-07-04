@@ -4,8 +4,10 @@
   "version": "0.5.4",
   "description": "Default view for test-runner",
   "repository": "https://github.com/test-runner-js/default-view",
-  "main": "dist/index.js",
-  "module": "index.mjs",
+  "exports": {
+    "import": "./index.mjs",
+    "require": "./dist/index.cjs"
+  },
   "keywords": [
     "test-runner",
     "test-runner-view",
@@ -13,23 +15,23 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "scripts": {
-    "test": "npm run dist && node --experimental-modules test.mjs",
-    "dist": "rollup -c",
-    "watch": "rollup -c -w"
+    "test": "npm run dist && node test.mjs",
+    "dist": "rollup -c"
   },
   "dependencies": {
-    "ansi-escape-sequences": "^5.1.2"
+    "ansi-escape-sequences": "^6.1.0"
   },
   "devDependencies": {
-    "rollup": "^1.27.8",
-    "test-object-model": "^0.5.10"
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@test-runner/tom": "^0.8.0",
+    "rollup": "^2.52.7"
   },
   "files": [
     "index.mjs",
-    "dist/index.js"
+    "dist"
   ],
   "standard": {
     "ignore": [

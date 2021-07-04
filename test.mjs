@@ -1,5 +1,5 @@
 import DefaultView from './index.mjs'
-import Tom from 'test-object-model'
+import Tom from '@test-runner/tom'
 
 const defaultView = new DefaultView({ viewShowStarts: true })
 

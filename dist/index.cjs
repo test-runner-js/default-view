@@ -1,10 +1,11 @@
 'use strict';
 
 function _interopNamespace(e) {
-  if (e && e.__esModule) { return e; } else {
-    var n = {};
-    if (e) {
-      Object.keys(e).forEach(function (k) {
+  if (e && e.__esModule) return e;
+  var n = Object.create(null);
+  if (e) {
+    Object.keys(e).forEach(function (k) {
+      if (k !== 'default') {
         var d = Object.getOwnPropertyDescriptor(e, k);
         Object.defineProperty(n, k, d.get ? d : {
           enumerable: true,
@@ -12,11 +13,11 @@ function _interopNamespace(e) {
             return e[k];
           }
         });
-      });
-    }
-    n['default'] = e;
-    return n;
+      }
+    });
   }
+  n['default'] = e;
+  return Object.freeze(n);
 }
 
 /**
@@ -67,17 +68,13 @@ function isArrayLike (input) {
 function arrayify (input) {
   if (Array.isArray(input)) {
     return input
-  }
-
-  if (input === undefined) {
+  } else if (input === undefined) {
     return []
-  }
-
-  if (isArrayLike(input) || input instanceof Set) {
+  } else if (isArrayLike(input) || input instanceof Set) {
     return Array.from(input)
+  } else {
+    return [input]
   }
-
-  return [ input ]
 }
 
 /* Control Sequence Initiator */
@@ -367,7 +364,7 @@ class DefaultView {
 
   async init () {
     if (typeof window === 'undefined') {
-      this._util = await new Promise(function (resolve) { resolve(_interopNamespace(require('util'))); });
+      this._util = await Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require('util')); });
     }
   }
 
