@@ -62,7 +62,7 @@ const csi = '\x1b[';
  * @exports ansi-escape-sequences
  * @typicalname ansi
  * @example
- * const ansi = require('ansi-escape-sequences')
+ * import ansi from 'ansi-escape-sequences'
  */
 const ansi = {};
 
@@ -211,6 +211,7 @@ ansi.styles = function (styles) {
 ansi.format = function (str, styleArray) {
   const re = /\[([\w\s-\(\),]+)\]{([^]*?)}/;
   let matches;
+  str = String(str);
   if (!str) return ''
 
   while (matches = str.match(re)) {
@@ -474,4 +475,4 @@ class DefaultView {
   }
 }
 
-export default DefaultView;
+export { DefaultView as default };

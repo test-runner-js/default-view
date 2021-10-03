@@ -9,14 +9,12 @@ function _interopNamespace(e) {
         var d = Object.getOwnPropertyDescriptor(e, k);
         Object.defineProperty(n, k, d.get ? d : {
           enumerable: true,
-          get: function () {
-            return e[k];
-          }
+          get: function () { return e[k]; }
         });
       }
     });
   }
-  n['default'] = e;
+  n["default"] = e;
   return Object.freeze(n);
 }
 
@@ -84,7 +82,7 @@ const csi = '\x1b[';
  * @exports ansi-escape-sequences
  * @typicalname ansi
  * @example
- * const ansi = require('ansi-escape-sequences')
+ * import ansi from 'ansi-escape-sequences'
  */
 const ansi = {};
 
@@ -233,6 +231,7 @@ ansi.styles = function (styles) {
 ansi.format = function (str, styleArray) {
   const re = /\[([\w\s-\(\),]+)\]{([^]*?)}/;
   let matches;
+  str = String(str);
   if (!str) return ''
 
   while (matches = str.match(re)) {

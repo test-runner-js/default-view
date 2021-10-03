@@ -1,4 +1,4 @@
-import DefaultView from './index.mjs'
+import DefaultView from '@test-runner/default-view'
 import Tom from '@test-runner/tom'
 
 const defaultView = new DefaultView({ viewShowStarts: true })
